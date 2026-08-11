@@ -32,7 +32,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="NPM">
+     <widget class="QLineEdit" name="student_id">
       <property name="styleSheet">
        <string notr="true">QLineEdit {
     background-color: rgba(0, 0, 0, 0);
@@ -67,7 +67,7 @@ QLineEdit::placeholder {
        <bool>false</bool>
       </property>
       <property name="placeholderText">
-       <string>Enter Your NPM</string>
+       <string>Enter Your Student ID</string>
       </property>
       <property name="cursorMoveStyle">
        <enum>Qt::LogicalMoveStyle</enum>
@@ -151,7 +151,7 @@ QPushButton:pressed {
    <zorder>Login</zorder>
    <zorder>verticalSpacer_2</zorder>
    <zorder>verticalSpacer_3</zorder>
-   <zorder>NPM</zorder>
+   <zorder>student_id</zorder>
   </widget>
  </widget>
  <resources>

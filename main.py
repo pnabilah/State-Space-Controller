@@ -58,26 +58,26 @@ class Login(QMainWindow):
         self.setWindowTitle("Login")
         self.setMinimumSize(460, 560)
         #self.setWindowFlags(Qt.FramelessWindowHint)
-        self.NPM.setFocusPolicy(Qt.ClickFocus)
-        self.NPM.clearFocus()  
+        self.student_id.setFocusPolicy(Qt.ClickFocus)
+        self.student_id.clearFocus()  
 
         self.Login.clicked.connect(self.login_user)
 
     def login_user(self):
-        npm = self.NPM.text().strip()
-        response = requests.get(FIREBASE_BASE_URL + f"students/{npm}.json")
+        student_id = self.student_id.text().strip()
+        response = requests.get(FIREBASE_BASE_URL + f"students/{student_id}.json")
         
         if response.status_code == 200:
             user_data = response.json()
 
             if user_data:  # Check if user exists
                 print("User exists! Proceed.")
-                session["npm"] = npm
+                session["student_id"] = student_id
 
                 # Check if problem_set already exists
                 if "problem_set" not in user_data:
                     selected_problem = random.randint(1, 10)
-                    update_url = FIREBASE_BASE_URL + f"students/{npm}/problem_set.json"
+                    update_url = FIREBASE_BASE_URL + f"students/{student_id}/problem_set.json"
                     requests.put(update_url, json=selected_problem)
                     session["problem_set"] = selected_problem
                     print(f"Assigned problem set {selected_problem}")
@@ -95,8 +95,8 @@ class Login(QMainWindow):
             else:
                 print("User not found!")
                 QMessageBox.warning(None, "Warning", "User not found!")
-                self.NPM.clear()
-                self.NPM.setFocus()
+                self.student_id.clear()
+                self.student_id.setFocus()
 
         else:
             print("Failed to connect to Firebase!")
@@ -174,22 +174,22 @@ class MainWindow(QMainWindow):
                 R_mae = mae(R_user, problem_set[session["problem_set"]]["R"])
                 R_acc = mae_percentage_accuracy(R_user, problem_set[session["problem_set"]]["R"])
                 # Update R_user data in Firebase
-                update_url = FIREBASE_BASE_URL + f"students/{session['npm']}/R_user.json"
+                update_url = FIREBASE_BASE_URL + f"students/{session['student_id']}/R_user.json"
                 requests.put(update_url, json=R_user.tolist())
 
                 # Update R_mae and R_acc
-                requests.put(FIREBASE_BASE_URL + f"students/{session['npm']}/R_mae.json", json=R_mae)
-                requests.put(FIREBASE_BASE_URL + f"students/{session['npm']}/R_acc.json", json=R_acc)
+                requests.put(FIREBASE_BASE_URL + f"students/{session['student_id']}/R_mae.json", json=R_mae)
+                requests.put(FIREBASE_BASE_URL + f"students/{session['student_id']}/R_acc.json", json=R_acc)
             if N_user is not None:
                 N_mae = mae(np.array(N_user).reshape(-1, 1), problem_set[session["problem_set"]]["N"])
                 N_acc = mae_percentage_accuracy(np.array(N_user).reshape(-1, 1), problem_set[session["problem_set"]]["N"])
                 # Update N_user data in Firebase
-                update_url = FIREBASE_BASE_URL + f"students/{session['npm']}/N_user.json"
+                update_url = FIREBASE_BASE_URL + f"students/{session['student_id']}/N_user.json"
                 requests.put(update_url, json=N_user)
 
                 # Update N_mae and N_acc
-                requests.put(FIREBASE_BASE_URL + f"students/{session['npm']}/N_mae.json", json=N_mae)
-                requests.put(FIREBASE_BASE_URL + f"students/{session['npm']}/N_acc.json", json=N_acc)
+                requests.put(FIREBASE_BASE_URL + f"students/{session['student_id']}/N_mae.json", json=N_mae)
+                requests.put(FIREBASE_BASE_URL + f"students/{session['student_id']}/N_acc.json", json=N_acc)
 
     def run_simulation(self):
         R_user = session.get("R_user")

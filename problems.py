@@ -1,8 +1,5 @@
-# problems.py
-
 import numpy as np
 
-# Define a dictionary of system problems
 problem_set = {
     1: {
         "A": np.array([[0, 2, -1],
